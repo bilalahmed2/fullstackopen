@@ -1,0 +1,14 @@
+browser->server: HTTP Get https://studies.cs.helsinki.fi/exampleapp/new_note
+server->browser: HTML Code
+browser->server: HTTP Get https://studies.cs.helsinki.fi/exampleapp/main.css
+server->browser: CSS Code (main.css)
+browser->server: HTTP Get https://studies.cs.helsinki.fi/exampleapp/spa.js
+server->browser: JS Code (spa.js)
+note over browser:
+while executing javascript, browser sees JSON code
+end note
+browser->server: HTTP Get https://studies.cs.helsinki.fi/exampleapp/data.json
+server->browser: Serves the requested JSON data 
+note over browser:
+browser uses JSON data and render notes on DOM
+end note
