@@ -61,7 +61,7 @@ const App = () => {
   }
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h2>Phonebook:</h2>
       <Filter newSearch={newSearch} filter={filter} />
 
       <h2>add a new</h2>
