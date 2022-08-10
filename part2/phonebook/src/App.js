@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const Filter = ({ newSearch, filter }) => (
+const Filter = ({ filter }) => (
   <form>
     <div>
-      filter show with: <input value={newSearch} onChange={filter} />
+      filter show with: <input onChange={filter} />
     </div>
   </form>
 );
@@ -35,22 +35,33 @@ const AddContacts = ({
     </form>
   );
 };
-const Display = ({ name }) => (
-  <p>
-    {name.name} {name.number}
-  </p>
-);
+const Display = ({ persons, filtered }) => {
+  if (filtered.length == 0) {
+    return (
+      <ul>
+        {persons.map((x, i) => <li key={i}>{x.name} {x.number}</li>)}
+      </ul>
+    )
+  } else {
+    return (
+      <ul>
+        {filtered.map((x, i) => <li key={i}>{x.name} {x.number}</li>)}
+      </ul>
+    )
+  };
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
 
   const [newNumber, setNewNumber] = useState("");
+  const [filteredSelection, updateFilterSelection] = useState([])
 
-  const [newSearch, setNewSearch] = "";
 
   const hook = () => {
     axios.get("http://localhost:3001/persons").then(((response) => {
-     setPersons(response.data)
+      setPersons(response.data)
     }))
   }
   useEffect(hook, [])
@@ -65,9 +76,11 @@ const App = () => {
     if (JSON.stringify(persons).includes(JSON.stringify(nameObj.name))) {
       alert(nameObj.name + " is already added to the phonebook");
     } else {
-      setPersons(persons.concat(nameObj));
+      setPersons(persons.concat([nameObj]));
       setNewName("");
       setNewNumber("");
+
+      axios.post("http://localhost:3001/persons", nameObj).then(r => r.data).catch(e => console.log(e))
     }
   };
   const handleChange = (event) => setNewName(event.target.value);
@@ -82,12 +95,12 @@ const App = () => {
         return x;
       }
     });
-    setPersons(filtered);
+    updateFilterSelection(filtered);
   };
   return (
     <div>
       <h2>Phonebook:</h2>
-      <Filter newSearch={newSearch} filter={filter} />
+      <Filter filter={filter} />
 
       <h2>add a new</h2>
       <AddContacts
@@ -99,9 +112,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      {persons.map((name, i) => (
-        <Display key={i} name={name} number={name} />
-      ))}
+      <Display persons={persons} filtered={filteredSelection} />
     </div>
   );
 };

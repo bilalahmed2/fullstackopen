@@ -1,14 +1,19 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Weather from "./Weather";
 
 const Display = ({ matchingCountries, displayCountries }) => {
+
+
+
   if (matchingCountries.length === 0) {
     return (
       <p>Enter a search query.</p>
     )
   } else if (matchingCountries.length === 1) {
     let languageKeys = Object.keys(matchingCountries[0].languages)
-    console.log(languageKeys)
+    
+
     return (
       <div>
         <h1>{matchingCountries[0].name.common}</h1>
@@ -16,9 +21,11 @@ const Display = ({ matchingCountries, displayCountries }) => {
         <p>area {matchingCountries[0].area}</p>
         <h3>languages:</h3>
         <ul>
-          {languageKeys.map((x,i) => <li key={i}>{matchingCountries[0].languages[x]}</li>)}
+          {languageKeys.map((x, i) => <li key={i}>{matchingCountries[0].languages[x]}</li>)}
         </ul>
-        <img src={matchingCountries[0].flags.png} />
+        <img src={matchingCountries[0].flags.png} alt="flag" />
+        <h2>Weather in {matchingCountries[0].capital}</h2>
+        <Weather city={matchingCountries[0].capital} />
       </div>
     )
   } else if (matchingCountries.length <= 20) {
@@ -35,6 +42,8 @@ const Display = ({ matchingCountries, displayCountries }) => {
 }
 
 const App = () => {
+
+
   const [countries, changeCounteries] = useState([]);
   const [matchingCountries, changeMatchingCountries] = useState([]);
 
