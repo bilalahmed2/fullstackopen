@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": 1
-    },
-    {
       "name": "Ada Lovelace",
       "number": "39-44-5323523",
       "id": 2
@@ -19,36 +14,6 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": 4
-    },
-    {
-      "name": "John Doe",
-      "number": "090078601",
-      "id": 5
-    },
-    {
-      "name": "Harry potter",
-      "number": "03123214",
-      "id": 6
-    },
-    {
-      "name": "Jane Done",
-      "number": "1233532",
-      "id": 7
-    },
-    {
-      "name": "Another contact",
-      "number": "123435234",
-      "id": 8
-    },
-    {
-      "name": "One more",
-      "number": "12323432",
-      "id": 9
-    },
-    {
-      "name": "Test again",
-      "number": "1234",
-      "id": 10
     }
   ]
 }

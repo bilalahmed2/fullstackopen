@@ -64,8 +64,15 @@ const App = () => {
     getPersons.getAll().then(persons => setPersons(persons))
 
   }
+  useEffect(hook, [persons.length])
   useEffect(hook, [])
-  const removeEntry = (personId) => alert(personId)
+  const removeEntry = (personId) => {
+    if (window.confirm("Do you really want to leave?")) {
+      getPersons.deleteEntry(personId).then(() => {
+        setPersons(persons.filter(x => x.id !== personId))
+      })
+    }
+  }
   const addValues = (event) => {
     event.preventDefault();
     const nameObj = {
@@ -73,9 +80,21 @@ const App = () => {
       number: newNumber,
     };
 
-    if (JSON.stringify(persons).includes(JSON.stringify(nameObj.name))) {
-      alert(nameObj.name + " is already added to the phonebook");
-    } else {
+    if (JSON.stringify(persons).includes(JSON.stringify(nameObj.name)) && JSON.stringify(persons).includes(JSON.stringify(nameObj.number))) {
+      alert(`${nameObj.name} is already added with the number: ${nameObj.number}`);
+    } else if (JSON.stringify(persons).includes(JSON.stringify(nameObj.name))) {
+      if (window.confirm(`${nameObj.name} is already added to the phonebook. Do you want to update the number?`)) {
+        const personToUpdate = persons.find(x => x.name === nameObj.name)
+        const changedPerson = { ...personToUpdate, number: nameObj.number }
+        getPersons.updateEntry(persons, changedPerson).then(response => {
+          setPersons(persons.map(person => person.id !== changedPerson.id ? person : response))
+          setNewName("")
+          setNewNumber("")
+        })
+      }
+    }
+
+    else {
 
       getPersons.create(nameObj).then(response => {
         setPersons(persons.concat([response]));
