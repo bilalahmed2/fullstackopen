@@ -2,6 +2,31 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import getPersons from './services/persons'
 
+
+const SuccessMessage = ({ message }) => {
+  if (message == null) {
+    return null
+  }
+
+  return (
+    <div className="success">
+      {message}
+    </div>
+  )
+}
+
+const ErrorMessage = ({ message }) => {
+  if (message == null) {
+    return null
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
 const Filter = ({ filter }) => (
   <form>
     <div>
@@ -27,7 +52,7 @@ const AddContacts = ({
           value={newNumber}
           onChange={handleChangeNumber}
           required
-          type="tel"
+          type="number"
         />
       </div>
       <div>
@@ -58,6 +83,8 @@ const App = () => {
 
   const [newNumber, setNewNumber] = useState("");
   const [filteredSelection, updateFilterSelection] = useState([])
+  const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
 
   const hook = () => {
@@ -67,9 +94,14 @@ const App = () => {
   useEffect(hook, [persons.length])
   useEffect(hook, [])
   const removeEntry = (personId) => {
-    if (window.confirm("Do you really want to leave?")) {
+    if (window.confirm("Do you really want to delete the entry?")) {
       getPersons.deleteEntry(personId).then(() => {
         setPersons(persons.filter(x => x.id !== personId))
+      }).catch(error => {
+        setErrorMessage(`Contact doesn't exist in database. It may have already been deleted.`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       })
     }
   }
@@ -101,6 +133,10 @@ const App = () => {
         console.log(persons)
         setNewName("");
         setNewNumber("");
+        setSuccessMessage(`${nameObj.name} was added to the database.`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
       })
     }
   };
@@ -124,6 +160,8 @@ const App = () => {
       <Filter filter={filter} />
 
       <h2>add a new</h2>
+      <SuccessMessage message={successMessage} />
+      <ErrorMessage message={errorMessage} />
       <AddContacts
         addValues={addValues}
         handleChange={handleChange}
