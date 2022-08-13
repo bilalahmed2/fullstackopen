@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import getPersons from './services/persons'
 
 const Filter = ({ filter }) => (
   <form>
@@ -35,17 +36,17 @@ const AddContacts = ({
     </form>
   );
 };
-const Display = ({ persons, filtered }) => {
-  if (filtered.length == 0) {
+const Display = ({ persons, filtered, removeEntry }) => {
+  if (filtered.length === 0) {
     return (
       <ul>
-        {persons.map((x, i) => <li key={i}>{x.name} {x.number}</li>)}
+        {persons.map((x, i) => <li key={i}>{x.name} {x.number} <button onClick={() => removeEntry(x.id)}>delete</button></li>)}
       </ul>
     )
   } else {
     return (
       <ul>
-        {filtered.map((x, i) => <li key={i}>{x.name} {x.number}</li>)}
+        {filtered.map((x, i) => <li key={i}>{x.name} {x.number} <button onClick={() => removeEntry(x.id)}>delete</button></li>)}
       </ul>
     )
   };
@@ -60,12 +61,11 @@ const App = () => {
 
 
   const hook = () => {
-    axios.get("http://localhost:3001/persons").then(((response) => {
-      setPersons(response.data)
-    }))
+    getPersons.getAll().then(persons => setPersons(persons))
+
   }
   useEffect(hook, [])
-
+  const removeEntry = (personId) => alert(personId)
   const addValues = (event) => {
     event.preventDefault();
     const nameObj = {
@@ -76,11 +76,13 @@ const App = () => {
     if (JSON.stringify(persons).includes(JSON.stringify(nameObj.name))) {
       alert(nameObj.name + " is already added to the phonebook");
     } else {
-      setPersons(persons.concat([nameObj]));
-      setNewName("");
-      setNewNumber("");
 
-      axios.post("http://localhost:3001/persons", nameObj).then(r => r.data).catch(e => console.log(e))
+      getPersons.create(nameObj).then(response => {
+        setPersons(persons.concat([response]));
+        console.log(persons)
+        setNewName("");
+        setNewNumber("");
+      })
     }
   };
   const handleChange = (event) => setNewName(event.target.value);
@@ -112,7 +114,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Display persons={persons} filtered={filteredSelection} />
+      <Display persons={persons} filtered={filteredSelection} removeEntry={removeEntry} />
     </div>
   );
 };
