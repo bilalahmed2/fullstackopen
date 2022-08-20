@@ -1,0 +1,7 @@
+POST https://phonebookfso1.herokuapp.com/api/persons
+Content-Type: application/json
+
+{
+    "name": "Mary Poppendieck",
+    "number": "123456678"
+}
