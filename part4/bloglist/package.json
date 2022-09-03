@@ -1,0 +1,11 @@
+{
+  "name": "bloglist",
+  "version": "1.0.0",
+  "description": "bloglist app for part4",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"no test implemented\""
+  },
+  "author": "bilal",
+  "license": "GPL-2.0-only"
+}
